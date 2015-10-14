@@ -44,7 +44,7 @@ clean() {
 	exit 0
     fi
     
-    PACKAGE=$(grep Name: "$SPEC" | cut -b6- | tr -d " ")
+    PACKAGE=$(rpmspec -D '_oneshot_requires_post Requires(post): /bin/true' -q --queryformat='%{name}\n' "$SPEC" | head -1)
     echo "Cleaning $PACKAGE ($SPEC)"
     rm -rv ~/rpmbuild/BUILD/$PACKAGE
 }
@@ -104,7 +104,7 @@ EOF
     fi
     
     echo "Building $SPEC for $TARGET"
-    PACKAGE=$(grep Name: "$SPEC" | cut -b6- | tr -d " \t")
+    PACKAGE=$(rpmspec -D '_oneshot_requires_post Requires(post): /bin/true' -q --queryformat='%{name}\n' "$SPEC" | head -1)
 
     echo "Checking dependencies..."
     # Note rpm-build is needed in sb2 target as well as it isn't fully accelerated with sb2 yet
